@@ -2,10 +2,12 @@ exports.getSecret = (requestParams, token) ->
     crypto = require 'crypto'
     shaSum = crypto.createHash 'sha1'
     requestParams = sortParams requestParams
+    console.log requestParams
     secret = ""
     requestString = ""
-    requestString += concatKeyValue key, value for key, value of requestParams
+    requestString += concatKeyValue? key, value for key, value of requestParams
     requestString += token
+    console.log requestString
     shaSum.update requestString
     secret = shaSum.digest 'hex'
     secret
@@ -18,8 +20,8 @@ sortParams = (params) ->
         a[1] - b[1]
     newParams = {}
     for param in sortable
-        newParams[param] = sortable[param]
+        newParams[param[0]] = param[1]
     newParams
 concatKeyValue = (key, value) ->
-    console.log key
-    "#{key}=#{value}&" if key isnt "secret"
+    console.log "key #{key} value #{value}"
+    if key isnt "secret" then "#{key}=#{value}&" else ""
